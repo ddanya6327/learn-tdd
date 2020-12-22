@@ -1,26 +1,37 @@
-const express = require('express');
+const express = require("express");
 
-require('dotenv').config();
+require("dotenv").config();
 const PORT = process.env.SERVER_PORT;
 
 const app = express();
-const productRoutes = require('./routes');
-const mongoose = require('mongoose');
+const productRoutes = require("./routes");
+const mongoose = require("mongoose");
 
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zd7sp.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.zd7sp.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     {
-        useUnifiedTopology: true,
-        useNewUrlParser: true
-    }).then(() => console.log('MongoDB Connected...'))
-    .catch(err => console.log(err));
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    }
+  )
+  .then(() => console.log("MongoDB Connected..."))
+  .catch((err) => console.log(err));
 
 app.use(express.json());
 
 app.use("/api/products", productRoutes);
 
-app.get('/', (req, res) => {
-    res.send('main');
+app.get("/", (req, res) => {
+  res.send("main");
 });
 
 app.listen(PORT);
 console.log(`Running on port ${PORT}`);
+
+// error handler
+app.use((error, req, res, next) => {
+  res.status(500).json({ message: error.message });
+});
+
+module.exports = app;
