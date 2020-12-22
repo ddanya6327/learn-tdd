@@ -14,6 +14,8 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cl
     }).then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err));
 
+app.use(express.json());
+
 app.use("/api/products", productRoutes);
 
 app.get('/', (req, res) => {

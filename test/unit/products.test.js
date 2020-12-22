@@ -26,14 +26,14 @@ describe("Product Controller Create", () => {
     productController.createProduct(req, res, next);
     expect(productModel.create).toBeCalledWith(newProduct);
   });
-  it("return 201 response code", () => {
-    productController.createProduct(req, res, next);
+  it("return 201 response code", async () => {
+    await productController.createProduct(req, res, next);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy();
   });
-  it("return json body in response", () => {
-      productModel.create.mockReturnValue(newProduct);
-      productController.createProduct(req, res, next);
-      expect(res._getJSONData()).toStrictEqual(newProduct);
-  })
+  it("return json body in response", async () => {
+    productModel.create.mockReturnValue(newProduct);
+    await productController.createProduct(req, res, next);
+    expect(res._getJSONData()).toStrictEqual(newProduct);
+  });
 });
