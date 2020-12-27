@@ -179,15 +179,15 @@ describe("Product Controller Delete", () => {
   });
   it("handle 404 when item doenst exist", async () => {
     productModel.findByIdAndDelete.mockReturnValue(null);
-    await productController.deleteProduct(req,res,next);
+    await productController.deleteProduct(req, res, next);
     expect(res.statusCode).toBe(404);
     expect(res._isEndCalled()).toBeTruthy();
-  })
+  });
   it("handle errors", async () => {
-    const errorMessage = {message: "Error deleting"}
+    const errorMessage = { message: "Error deleting" };
     const rejectedPromise = Promise.reject(errorMessage);
     productModel.findByIdAndDelete.mockReturnValue(rejectedPromise);
-    await productController.deleteProduct(req,res,next);
+    await productController.deleteProduct(req, res, next);
     expect(next).toHaveBeenCalledWith(errorMessage);
-  })
+  });
 });
