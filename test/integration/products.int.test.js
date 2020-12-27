@@ -28,17 +28,28 @@ it("GET /api/products", async () => {
   expect(Array.isArray(response.body)).toBeTruthy();
   expect(response.body[0].name).toBeDefined();
   expect(response.body[0].description).toBeDefined();
-  firstProduct = response.body[0]
+  firstProduct = response.body[0];
 });
 
-it("GET /api/products/:productId", async() => {
+it("GET /api/products/:productId", async () => {
   const response = await request(app).get(`/api/products/${firstProduct._id}`);
-  expect(response.statusCode).toBe(200)
-  expect(response.body.name).toBe(firstProduct.name)
-  expect(response.body.description).toBe(firstProduct.description)
-})
+  expect(response.statusCode).toBe(200);
+  expect(response.body.name).toBe(firstProduct.name);
+  expect(response.body.description).toBe(firstProduct.description);
+});
 
 it("GET id doenst exist /api/products/:productId", async () => {
-  const response = await request(app).get('/api/products/5fe1da6e715bc436c8b8aaaa')
-  expect(response.statusCode).toBe(404)
-})
+  const response = await request(app).get(
+    "/api/products/5fe1da6e715bc436c8b8aaaa"
+  );
+  expect(response.statusCode).toBe(404);
+});
+
+it("PUT /api/products", async () => {
+  const res = await request(app)
+    .put(`/api/products/${firstProduct._id}`)
+    .send({ name: "updated name", description: "updated description" });
+  expect(res.statusCode).toBe(200);
+  expect(res.body.name).toBe("updated name");
+  expect(res.body.description).toBe("updated description");
+});
