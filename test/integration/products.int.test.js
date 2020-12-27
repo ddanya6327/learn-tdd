@@ -53,3 +53,10 @@ it("PUT /api/products", async () => {
   expect(res.body.name).toBe("updated name");
   expect(res.body.description).toBe("updated description");
 });
+
+it("PUT id doenst exist /api/products/:productId", async () => {
+  const res = await request(app)
+    .put("/api/products/5fe1da6e715bc436c8b8aaaa")
+    .send({ name: "updated name", description: "updated description" });
+  expect(res.statusCode).toBe(404);
+});
