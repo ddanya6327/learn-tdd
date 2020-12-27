@@ -73,16 +73,38 @@ describe("Product Controller Get", () => {
     productModel.find.mockReturnValue(rejectedPromise);
     await productController.getProducts(req, res, next);
     expect(next).toBeCalledWith(errorMessage);
-  })
+  });
 });
 
 describe("Product Controller GetById", () => {
   it("have a getProductById", async () => {
-    expect(typeof productController.getProductById).toBe("function")
-  })
+    expect(typeof productController.getProductById).toBe("function");
+  });
   it("call productModel.findById", async () => {
     req.params.productId = productId;
-    await productController.getProductById(req,res,next);
+    await productController.getProductById(req, res, next);
     expect(productModel.findById).toBeCalledWith(productId);
-  })
-})
+  });
+  it("return json body and response code 200", async () => {
+    req.params.productId = productId;
+    productModel.findById.mockReturnValue(newProduct);
+    await productController.getProductById(req, res, next);
+
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toStrictEqual(newProduct);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+  it("return 404 when item doesnt exist", async () => {
+    productModel.findById.mockReturnValue(null);
+    await productController.getProductById(req, res, next);
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+  it("handle errors", async () => {
+    const errorMessage = { message: "error" };
+    const rejectedPromise = Promise.reject(errorMessage);
+    productModel.findById.mockReturnValue(rejectedPromise);
+    await productController.getProductById(req, res, next);
+    expect(next).toHaveBeenCalledWith(errorMessage);
+  });
+});
